@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>{% block title %}資安登入系統{% endblock %}</title>
+	<link href="https://stackpath.bootstrapcdn.com/bootswatch/4.1.3/journal/bootstrap.min.css" rel="stylesheet" >
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <h2 class="navbar-brand" style="font-size: 30px">登入系統</h2><br>
+    <a class="navbar-brand" href="/">首頁</a>
+    <a class="navbar-brand" href="/register">註冊帳號</a>
+    {% if not username %}
+    <a class="navbar-brand" href="/login">登入</a>
+    {% else %}
+    <a class="navbar-brand" href="/login">登出</a>
+    {% endif %}
+</nav>
+{% block content %}{% endblock %}
+</body>
+</html>
