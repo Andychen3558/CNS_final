@@ -1,7 +1,7 @@
 '''
 #Use like this!!:
-from server_core import Digger
-users = Digger()
+from server_core import API
+users = API()
 
 user_name = 'A-di'
 password = 'English'
@@ -18,7 +18,7 @@ else:
 good , next_question = user.try_to_login(username, password, sessionid)
 while good and next_question is not None:
     #user choose an answer from next_question
-    update_by_choice(username, password, sessionid, user_ans)
+    user.update_by_choice(username, password, sessionid, user_ans)
     good , next_question = user.try_to_login(username, password, sessionid)
 if not good:
     print('login failed.')
