@@ -8,11 +8,12 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <h2 class="navbar-brand" style="font-size: 30px">登入系統</h2><br>
     <a class="navbar-brand" href="/">首頁</a>
-    <a class="navbar-brand" href="/register">註冊帳號</a>
+    <a class="navbar-brand" href="/register">註冊</a>
     {% if not username %}
     <a class="navbar-brand" href="/login">登入</a>
     {% else %}
-    <a class="navbar-brand" href="/login">登出</a>
+    <a class="navbar-brand" href="/logout">登出</a>
+    <p class="navbar-brand">Hello, {{ username }}</p>
     {% endif %}
 </nav>
 {% block content %}{% endblock %}

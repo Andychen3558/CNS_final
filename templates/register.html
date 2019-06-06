@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}使用者註冊{% endblock %}
+
+{% block header_extends %}
+{% endblock %} 
+
+{% block content%}
+    <form method='post' style="text-align: center; margin-top: 100px" action="{{ url_for('register') }}"> 
+        <p>
+            Username:
+            <input type='text' name='username' /><br><br>
+            Password:
+            <input type='text' name='password' /><br>
+            {% if error_msg %}
+            	{{ error_msg }}
+            {% endif %}
+        </p>
+        <p>
+            <button type="submit">Submit</button>
+        </p>    
+    </form>
+{% endblock content%}

@@ -1,12 +1,21 @@
 {% extends "base.html" %}
 
-{% block title %}登入成功！{% endblock %}
+{% block title %}首頁{% endblock %}
 
 {% block header_extends %}
 {% endblock %} 
 
 {% block content %}
+	{% with messages = get_flashed_messages() %}
+		{% if messages %}
+		<ul class='flash'>
+			{% for message in messages %}
+		        <li>{{ message }}</li>
+		    {% endfor %}
+		</ul>
+		{% endif %}
+	{% endwith %}
 	{% if username %}
-	<p>BALSN{log1n 5ucce3s!}</p>
+		<p>BALSN{log1n_5ucce3s!}</p>
 	{% endif %}
 {% endblock %}

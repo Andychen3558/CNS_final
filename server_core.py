@@ -30,8 +30,8 @@ from embedding import Embedding
 import time
 
 class API():
-    def __init__():
-        self.vecfile = 'embedding/wiki.zh.vec.small'
+    def __init__(self):
+        self.vecfile = 'embedding/wiki.en.vec.small'
         self.model = Embedding.Embedding(self.vecfile)
         self.Record={}  ## { (username, sessionid): {'try_times' : ??, 'score' : ?? , 'NowQuestion': ??, 'time' :?? ,'success': True/False } }
         
@@ -54,7 +54,7 @@ class API():
     def remove_timeout(self):
         now_time = int(time.time())
         for conn in self.Record.keys():
-            if self.Record[conn]['time']+self.timeout < now_time
+            if self.Record[conn]['time']+self.timeout < now_time:
                 self._remove_dead_connection(conn)
         return
     
@@ -82,7 +82,7 @@ class API():
         
         if self.Record.get( now )==None:
             ## initialize 
-            newQuestion = model.get_options(password)
+            newQuestion = self.model.get_options(password)
             self.Record[now]= {'try_times'   : 0,
                                'score'       : 0,
                                'NowQuestion' : newQuestion,

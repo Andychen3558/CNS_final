@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}使用者驗證{% endblock %}
+
+{% block header_extends %}
+{% endblock %} 
+
+{% block content%}
+	<hr class="my-4">
+		
+		{% for choice in next_question %}
+	    	{{ forloop.counter }}
+	    {% endfor %}
+    <hr class="my-4">
+{% endblock content%}
