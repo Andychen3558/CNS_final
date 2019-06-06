@@ -115,7 +115,10 @@ class API():
 
             word=None
 
+            print ("user_ans is: ", user_ans)
+
             for tmp in now_question.keys():
+                print(tmp, now_question[tmp]['name'])
                 if now_question[tmp]['name'] == user_ans:
                     word = tmp
             if word==None:
