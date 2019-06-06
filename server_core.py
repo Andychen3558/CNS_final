@@ -82,7 +82,7 @@ class API():
         
         if self.Record.get( now )==None:
             ## initialize 
-            newQuestion = self.model.get_options(password)
+            newQuestion = dict(self.model.get_options(password))
             self.Record[now]= {'try_times'   : 0,
                                'score'       : 0,
                                'NowQuestion' : newQuestion,
@@ -112,17 +112,24 @@ class API():
             print('diggerrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr!!!!!')
         else:
             now_question = self.Record[now]['NowQuestion']
-            bias = sum([attr['score'] for attr in now_question.values()]) / len(now_question)
-            if now_question.get(user_ans) == None:
+
+            word=None
+            for tmp in now_question.keys():
+                if now_question[tmp]['name'] == user_ans:
+                    word = tmp
+            if word==None:
                 return
-            chosen_score = now_question[user_ans]['score']
+            
+            bias = sum([attr['score'] for attr in now_question.values()]) / len(now_question)
+            
+            chosen_score = now_question[ word ]['score']
             ## penalize low-scored choices
             if chosen_score < bias:
                 self.Record[now]['score'] = float('-inf')
             else:
                 self.Record[now]['score'] += chosen_score
-            print ( "score is: ", self.Record[now]['score'] )
-            new_question = self.model.get_options(password)
+            print ( "score is: " , self.Record[now]['score'] )
+            new_question = dict(self.model.get_options(password))
             self.Record[now]['NowQuestion'] = new_question
             self.Record[now]['try_times'] += 1
             self.Record[now]['time'] = int(time.time())
