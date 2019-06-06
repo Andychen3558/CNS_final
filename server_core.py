@@ -8,7 +8,7 @@ password = 'English'
 sessionid = 77777
 
 #registeration
-susess = users.register(username, password, sessionid)
+susess = users.register(password)
 if sucess:
     print('you is good oh!')
 else:
@@ -95,7 +95,7 @@ class API():
         if self.Record[now]['success']==True:
             return (True, None)
         elif self.Record[now]['failure']==True:
-            _remove_dead_connection(now)
+            self._remove_dead_connection(now)
             return (False, None)
         else:
             tmp_list = self._get_list(now)
@@ -121,7 +121,7 @@ class API():
                 self.Record[now]['score'] = float('-inf')
             else:
                 self.Record[now]['score'] += chosen_score
-            new_uestion = model.get_options(password)
+            new_uestion = self.model.get_options(password)
             self.Record[now]['NowQuestion'] = new_question
             self.Record[now]['try_times'] += 1
             self.Record[now]['time'] = int(time.time())
