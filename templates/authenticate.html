@@ -7,9 +7,13 @@
 
 {% block content%}
 	<hr class="my-4">
-		
+	<form method='post' style="text-align: center; margin-top: 100px" action="./authenticate">
 		{% for choice in next_question %}
-	    	{{ forloop.counter }}
+			<input type="radio" name="choice" id="choice{{ loop.index }}" value="{{ choice }}">
+	    	<label for="choice{{ loop.index }}">{{ choice }}</label>
+	    	<br>
 	    {% endfor %}
+	    <button type="submit">Submit</button>
+	</form>
     <hr class="my-4">
 {% endblock content%}
