@@ -114,6 +114,7 @@ class API():
             now_question = self.Record[now]['NowQuestion']
 
             word=None
+
             for tmp in now_question.keys():
                 if now_question[tmp]['name'] == user_ans:
                     word = tmp

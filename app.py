@@ -83,6 +83,7 @@ def authenticate(username):
 	if request.method == 'POST':
 		#user choose an answer from next_question
 		print(request.form['choice'])
+		print('-----')
 		userAPIs.update_by_choice(user.username, user.password, sessionid, request.form['choice'])
 		print('-----')
 		return redirect(url_for('authenticate', username=user.username))
