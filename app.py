@@ -78,14 +78,12 @@ def login():
 @app.route('/<username>/authenticate', methods=['GET', 'POST'])
 def authenticate(username):
 	user = find_user(username)
-	sessionid = random.randint(0, 100000)
+	sessionid = 81000
+	print(session['_id'])
 	good , next_question = userAPIs.try_to_login(user.username, user.password, sessionid)
 	if request.method == 'POST':
 		#user choose an answer from next_question
-		print(request.form['choice'])
-		print('-----')
 		userAPIs.update_by_choice(user.username, user.password, sessionid, request.form['choice'])
-		print('-----')
 		return redirect(url_for('authenticate', username=user.username))
 	else:
 		if not good:
