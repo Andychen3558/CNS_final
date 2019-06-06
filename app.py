@@ -82,8 +82,9 @@ def authenticate(username):
 	good , next_question = userAPIs.try_to_login(user.username, user.password, sessionid)
 	if request.method == 'POST':
 		#user choose an answer from next_question
-		print(userAPIs.Record[now]['score'])
+		print(request.form['choice'])
 		userAPIs.update_by_choice(user.username, user.password, sessionid, request.form['choice'])
+		print('-----')
 		return redirect(url_for('authenticate', username=user.username))
 	else:
 		if not good:

@@ -82,7 +82,7 @@ class API():
         
         if self.Record.get( now )==None:
             ## initialize 
-            newQuestion = self.model.get_options(password)
+            newQuestion = dict(self.model.get_options(password))
             self.Record[now]= {'try_times'   : 0,
                                'score'       : 0,
                                'NowQuestion' : newQuestion,
@@ -111,18 +111,22 @@ class API():
             print('You are caculating a score in a nonexistent session.')
             print('diggerrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr!!!!!')
         else:
+            print('1')
             now_question = self.Record[now]['NowQuestion']
+            print(now_question.keys())
             bias = sum([attr['score'] for attr in now_question.values()]) / len(now_question)
             if now_question.get(user_ans) == None:
                 return
             chosen_score = now_question[user_ans]['score']
+            print('2')
             ## penalize low-scored choices
             if chosen_score < bias:
                 self.Record[now]['score'] = float('-inf')
             else:
                 self.Record[now]['score'] += chosen_score
+            print('3')
             print ( "score is: ", self.Record[now]['score'] )
-            new_question = self.model.get_options(password)
+            new_question = dict(self.model.get_options(password))
             self.Record[now]['NowQuestion'] = new_question
             self.Record[now]['try_times'] += 1
             self.Record[now]['time'] = int(time.time())
