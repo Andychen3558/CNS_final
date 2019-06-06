@@ -23,6 +23,8 @@ app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=5) # 配置7天有�
 db = SQLAlchemy()
 db.init_app(app)
 
+user_session={}
+
 class UserModel(db.Model):
 	__tablename__ = 'users'
 	id = db.Column(db.Integer, primary_key=True)
@@ -78,7 +80,10 @@ def login():
 @app.route('/<username>/authenticate', methods=['GET', 'POST'])
 def authenticate(username):
 	user = find_user(username)
-	sessionid = 81000
+	if user_session.get(username)==None:
+		user_session[username] = random.randint(0,100000)
+	sessionid = user_session[username]
+	
 	print(session['_id'])
 	good , next_question = userAPIs.try_to_login(user.username, user.password, sessionid)
 	if request.method == 'POST':
@@ -90,6 +95,7 @@ def authenticate(username):
 			flash('Login failed!')
 			return render_template('home.html')
 		elif next_question is None:
+			del user_session[username]
 			return redirect(url_for('valid_user', username=user.username))
 		else:
 			return render_template('authenticate.html', next_question=next_question)
