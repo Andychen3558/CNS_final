@@ -80,12 +80,9 @@ def login():
 @app.route('/<username>/authenticate', methods=['GET', 'POST'])
 def authenticate(username):
 	user = find_user(username)
-	#sessionid = 81000
 	if user_session.get(username)==None:
 		user_session[username] = random.randint(0,100000)
 	sessionid = user_session[username]
-	
-	
 
 	good , next_question = userAPIs.try_to_login(user.username, user.password, sessionid)
 	if request.method == 'POST':
