@@ -29,7 +29,7 @@ else:
 from embedding import Embedding
 import time
 
-class Digger():
+class API():
     def __init__():
         self.vecfile = 'embedding/wiki.zh.vec.small'
         self.model = Embedding.Embedding(self.vecfile)
