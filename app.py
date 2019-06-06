@@ -79,7 +79,6 @@ def login():
 def authenticate(username):
 	user = find_user(username)
 	sessionid = 81000
-	print(session['_id'])
 	good , next_question = userAPIs.try_to_login(user.username, user.password, sessionid)
 	if request.method == 'POST':
 		#user choose an answer from next_question
