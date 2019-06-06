@@ -111,21 +111,24 @@ class API():
             print('You are caculating a score in a nonexistent session.')
             print('diggerrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr!!!!!')
         else:
-            print('1')
             now_question = self.Record[now]['NowQuestion']
-            print(now_question.keys())
-            bias = sum([attr['score'] for attr in now_question.values()]) / len(now_question)
-            if now_question.get(user_ans) == None:
+
+            word=None
+            for tmp in now_question.keys():
+                if now_question[tmp]['name'] == user_ans:
+                    word = tmp
+            if word==None:
                 return
-            chosen_score = now_question[user_ans]['score']
-            print('2')
+            
+            bias = sum([attr['score'] for attr in now_question.values()]) / len(now_question)
+            
+            chosen_score = now_question[ word ]['score']
             ## penalize low-scored choices
             if chosen_score < bias:
                 self.Record[now]['score'] = float('-inf')
             else:
                 self.Record[now]['score'] += chosen_score
-            print('3')
-            print ( "score is: ", self.Record[now]['score'] )
+            print ( "score is: " , self.Record[now]['score'] )
             new_question = dict(self.model.get_options(password))
             self.Record[now]['NowQuestion'] = new_question
             self.Record[now]['try_times'] += 1
