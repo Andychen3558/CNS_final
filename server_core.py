@@ -121,7 +121,8 @@ class API():
                 self.Record[now]['score'] = float('-inf')
             else:
                 self.Record[now]['score'] += chosen_score
-            new_uestion = self.model.get_options(password)
+            print ( "score is: ", self.Record[now]['score'] )
+            new_question = self.model.get_options(password)
             self.Record[now]['NowQuestion'] = new_question
             self.Record[now]['try_times'] += 1
             self.Record[now]['time'] = int(time.time())
