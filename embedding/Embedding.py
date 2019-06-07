@@ -1,20 +1,26 @@
 
 # coding: utf-8
 
-# In[15]:
+# In[1]:
 
 
 import gensim
 import random
+import json
 from .request_img import get_img
 
 
-# In[16]:
+# In[2]:
 
 
 class Embedding():
-    def __init__(self, wordfile):
+    def __init__(self, wordfile, cache_url=None):
         self.model = gensim.models.KeyedVectors.load_word2vec_format(wordfile)
+        if cache_url:
+            with open(cache_url, 'r') as f:
+                self.cache_url = json.load(f)
+        else:
+            self.cache_url = {}
         self.postopn = 50 # choise topn of positive words
         self.posrann = 2 # sample n from above
         self.posmask = 5 # avoid topn
@@ -50,15 +56,20 @@ class Embedding():
         random.shuffle(choice)
         
         choice_dic = {}
+        
         for i in choice:
             choice_dic[i] = {
-                "url": get_img(i),
+                "url": self.cache_url[i] if i in self.cache_url else get_img(i),
                 "score": self.model.similarity(word, i),
                 "name": i
             }
             
         return choice_dic
     
+    def similarity(self, w1, w2):
+        if not self.invocab(w1) or not self.invocab(w2):
+            return None
+        return self.model.similarity(w1, w2)
 # gensim example:          
 # sim = m.model.most_similar(positive=['貴族', '女人'], negative=['男人'], topn=1000)
 # sim = [(i,m.model.vocab[i[0]].count) for i in sim]
@@ -68,14 +79,26 @@ class Embedding():
 # m.model.doesnt_match('歌手')
 
 
-# In[17]:
+# In[3]:
 
 
-# m = Embedding('wiki.zh.vec.small')
+# m = Embedding('wiki.en.vec.small')
 
 
-# In[18]:
+# In[4]:
 
 
-# print(m.get_options('音樂'))
+# print(m.get_options('bird'))
+
+
+# In[11]:
+
+
+# m.model.vocab['bird'].count
+
+
+# In[5]:
+
+
+# m.similarity('bird', 'tree')
 
