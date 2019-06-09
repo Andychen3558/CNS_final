@@ -138,9 +138,9 @@ class API():
             max_score, min_score = max(score_list), min(score_list)
             chosen_score = now_question[ word ]['score']
             now_times = self.Record[now]['try_times']
-            self.Record[now]['score'] *= now_times
-            self.Record[now]['score'] += (chosen_score - min_score) / (max_score - min_score)
-            self.Record[now]['score'] /= now_times + 1
+            #self.Record[now]['score'] *= now_times
+            self.Record[now]['score'] += (chosen_score - min_score) / (max_score - min_score) / (self.try_bound + 1)
+            #self.Record[now]['score'] /= now_times + 1
 
 
             # print ( "score is: " , self.Record[now]['score'] )
