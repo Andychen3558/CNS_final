@@ -34,7 +34,7 @@ def parse_html(html_doc):
 			image_set.append(link) 
 			#print(link.get('data-src'))
 	len_result=len(image_set)
-	rand=randint(0,len_result-1)
+	rand=randint(0, min(len_result,10)-1)
 
 	return str(image_set[rand].get('data-src'))
 	#print(str(link))

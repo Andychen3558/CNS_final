@@ -30,14 +30,12 @@ from embedding import Embedding
 import time
 
 class API():
-    def __init__(self):
-        self.vecfile = 'embedding/wiki.en.vec.small'
-        self.cache = self.vecfile+'.urlcache.json'
-        self.model = Embedding.Embedding(self.vecfile, self.cache)
+    def __init__(self, vecfile, cache=None):
+        self.model = Embedding.Embedding(vecfile, cache)
         self.Record={}  ## { (username, sessionid): {'try_times' : ??, 'score' : ?? , 'NowQuestion': ??, 'time' :?? ,'success': True/False } }
         
         ## use for score threshold
-        self.success_thres = 0.75 
+        self.success_thres = 0.6
         self.try_bound = 3
     
         ## use for timeout

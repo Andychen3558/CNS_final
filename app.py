@@ -12,7 +12,9 @@ import os
 import random
 
 from server_core import API
-userAPIs = API()
+vecfile = 'embedding/wiki.en.vec.small'
+caahe = 'embedding/wiki.en.vec.small.urlcache.json'
+userAPIs = API(vecfile)
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///user.db'
@@ -24,6 +26,7 @@ db = SQLAlchemy()
 db.init_app(app)
 
 user_session={}
+success_user=[]
 
 class UserModel(db.Model):
 	__tablename__ = 'users'
@@ -113,6 +116,7 @@ def authenticate(username):
 			flash('Login failed!')
 			return render_template('home.html')
 		elif next_question_words is None:
+			success_user.append(user.username)
 			del user_session[username]
 			return redirect(url_for('valid_user', username=user.username))
 		else:
@@ -120,6 +124,8 @@ def authenticate(username):
 
 @app.route('/<username>')
 def valid_user(username):
+	if username not in success_user:
+		return render_template('home.html')
 	flash('Login success!')
 	flash('done well!')
 	### set session
@@ -127,9 +133,10 @@ def valid_user(username):
 	session.permanent = True
 	return render_template('home.html', username=username)
 
-@app.route('/logout')
-def logout():
+@app.route('/logout/')
+def logout(username):
 	session.pop('username', None)
+	# success_user.remove(username)
 	return render_template('home.html')
 
 @app.route('/<username>/delete')
@@ -150,5 +157,5 @@ def check_password(password):
 
 if __name__ == '__main__':
 	app.secret_key = '12345'
-	app.run(host='127.0.0.1', port=8000, debug=True)
+	app.run(host='localhost', port=8000, debug=True)
 
