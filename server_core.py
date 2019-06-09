@@ -67,7 +67,7 @@ class API():
         if self.Record[now]['score']>self.success_thres:
             self.Record[now]['success'] = True
         
-        ## failure if times exceed
+- [ ]         ## failure if times exceed
         elif self.Record[now]['try_times']> self.try_bound:
             self.Record[now]['failure'] = True
         
@@ -152,7 +152,9 @@ class API():
         return
     
     # return a string that an attacker may choose
-    def attack(now_question, history)
+    def attack(username, sessionid, history)
+        now = (username, sessionid)
+        now_question = self.Record[now]['NowQuestion']
         guessed_ans = None
         max_score = float('-inf')
         for name in now_question.keys():
@@ -236,4 +238,21 @@ class API():
             self.Record[now]['time'] = int(time.time())
 
         return
+    
+    # return a list of string that an attacker may choose
+    def attack_v2(username, sessionid, history)
+        now = (username, sessionid)
+        now_question = self.Record[now]['NowQuestion']
+        guessed_ans = None
+        max_score = float('-inf')
+        for group in now_question.values():
+            group_names = [attr['name'] for attr in group]
+            score = 0
+            for his_names in history:
+                score += max([self.model.similarity(group_name, his_name)
+                              for group_name, his_name in zip(group_names, his_names)])
+            if score > max_score:
+                guessed_ans = group_names
+                max_score = score
+        return guessed_ans
     
