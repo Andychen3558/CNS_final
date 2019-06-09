@@ -37,9 +37,9 @@ class API():
         self.Record={}  ## { (username, sessionid): {'try_times' : ??, 'score' : ?? , 'NowQuestion': ??, 'time' :?? ,'success': True/False } }
         
         ## use for score threshold
-        self.success_thres = 1 
+        self.success_thres = 0.75 
         self.try_bound = 3
-        
+    
         ## use for timeout
         self.timeout = 120
         
@@ -123,7 +123,7 @@ class API():
                     word = tmp
             if word==None:
                 return
-            
+            '''
             bias = sum([attr['score'] for attr in now_question.values()]) / len(now_question)
             
             chosen_score = now_question[ word ]['score']
@@ -132,6 +132,17 @@ class API():
                 self.Record[now]['score'] = float('-inf')
             else:
                 self.Record[now]['score'] += chosen_score
+            '''
+
+            score_list = [attr['score'] for attr in now_question.values()]
+            max_score, min_score = max(score_list), min(score_list)
+            chosen_score = now_question[ word ]['score']
+            now_times = self.Record[now]['try_times']
+            self.Record[now]['score'] *= now_times
+            self.Record[now]['score'] += (chosen_score - min_score) / (max_score - min_score)
+            self.Record[now]['score'] /= now_times + 1
+
+
             # print ( "score is: " , self.Record[now]['score'] )
             new_question = dict(self.model.get_options(password))
             self.Record[now]['NowQuestion'] = new_question
