@@ -9,11 +9,14 @@
 	<hr class="my-4">
 	<form method='post' style="text-align: center; margin-top: 100px" action="./authenticate">
 		{% for choice in next_question %}
-			<input type="radio" name="choice" id="choice{{ loop.index }}" value="{{ choice }}">
-			<img src="{{ choice }}" for="choice{{ loop.index }}">
-	    	<!-- <label for="choice{{ loop.index }}">{{ choice }}</label> -->
-	    	<br>
+			<div style="display: inline-block; width: 30%;">
+				<input type="radio" name="choice" id="choice{{ loop.index }}" value="{{ choice }}">
+				<img src="{{ choice }}" for="choice{{ loop.index }}">
+		    	<!-- <label for="choice{{ loop.index }}">{{ choice }}</label> -->
+		    	<br>
+	    	</div>
 	    {% endfor %}
+	    <br><br>
 	    <button type="submit">Submit</button>
 	</form>
     <hr class="my-4">

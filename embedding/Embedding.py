@@ -21,14 +21,14 @@ class Embedding():
                 self.cache_url = json.load(f)
         else:
             self.cache_url = {}
-        self.postopn = 100 # choise topn of positive words
+        self.postopn = 50 # choise topn of positive words
         self.posrann = 1 # sample n from above
-        self.posmask = 10 # avoid topn
-        # self.negtopn = 0 # choise topn of negative words
-        # self.negrann = 0 # sample n from above
+        self.posmask = 0 # avoid topn
+        self.negtopn = 0 # choise topn of negative words
+        self.negrann = 0 # sample n from above
         self.optionn = 9 # total choice num
-        self.postopn2 = 3000
-        self.posrann2 = 8
+        # self.postopn2 = 3000
+        # self.posrann2 = 8
 
     def invocab(self, word):
         return word in self.model.vocab
@@ -49,14 +49,14 @@ class Embedding():
         # negkeys = [neg[i][0] for i in range(self.negtopn)]
         # choice.extend(random.sample(negkeys, self.negrann))
         
-        # # random select keys
-        # keys = self.model.vocab.keys()
-        # otherkeys = random.sample(keys, self.optionn-self.posrann-self.negrann)
-        # choice.extend(otherkeys)
+        # random select keys
+        keys = self.model.vocab.keys()
+        otherkeys = random.sample(keys, self.optionn-self.posrann-self.negrann)
+        choice.extend(otherkeys)
 
-        high = self.model.most_similar(positive=[word], topn=self.postopn2)
-        highkeys = [high[i][0] for i in range(self.posmask, self.postopn2)]
-        choice = random.sample(highkeys, self.posrann2)
+        # high = self.model.most_similar(positive=[word], topn=self.postopn2)
+        # highkeys = [high[i][0] for i in range(self.posmask, self.postopn2)]
+        # choice = random.sample(highkeys, self.posrann2)
         
         #shuffel keys
         random.shuffle(choice)
