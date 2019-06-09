@@ -18,7 +18,7 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///user.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = os.urandom(24)
-app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=5) # 配置7天有效 
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=5) 
 
 db = SQLAlchemy()
 db.init_app(app)
@@ -30,16 +30,30 @@ class UserModel(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	username = db.Column(db.String(30), unique=True, nullable=False)
 	password = db.Column(db.String(30))
+	choices = db.Column(db.String(100))
 
 	def __init__(self, username, password):
 		self.username = username
 		self.password = password
+		self.choices = ""
+
 	def add_user(self):
 		db.session.add(self)
 		db.session.commit()
+	def add_choice(self, choice):
+		self.choices += (choice+';')
+		db.session.commit()
+	def init_choices(self):
+		self.choices = ""
+		db.session.commit()
+
 	@classmethod
 	def get_user(cls, username):
 		return cls.query.filter_by(username=username).first()
+	@classmethod
+	def delete_user(cls, username):
+		db.session.delete(username)
+		db.session.commit()
 
 migrate = Migrate(app, db)
 
@@ -73,31 +87,36 @@ def login():
 	if request.method == 'POST':
 		user = find_user(request.form['username'])
 		if user:
+			user.init_choices()
 			return redirect(url_for('authenticate', username=user.username))
-			#return redirect(url_for('authenticate', user=user.username))
 	return render_template('login.html')
 
 @app.route('/<username>/authenticate', methods=['GET', 'POST'])
 def authenticate(username):
 	user = find_user(username)
+	print(user.choices)
 	if user_session.get(username)==None:
 		user_session[username] = random.randint(0,100000)
 	sessionid = user_session[username]
 
-	good , next_question = userAPIs.try_to_login(user.username, user.password, sessionid)
+	good , next_question_words, next_question_urls = userAPIs.try_to_login(user.username, user.password, sessionid)
 	if request.method == 'POST':
 		#user choose an answer from next_question
-		userAPIs.update_by_choice(user.username, user.password, sessionid, request.form['choice'])
+		index = next_question_urls.index(request.form['choice'])
+		print(index)
+		answer = next_question_words[index]
+		user.add_choice(answer)
+		userAPIs.update_by_choice(user.username, user.password, sessionid, answer)
 		return redirect(url_for('authenticate', username=user.username))
 	else:
 		if not good:
 			flash('Login failed!')
 			return render_template('home.html')
-		elif next_question is None:
+		elif next_question_words is None:
 			del user_session[username]
 			return redirect(url_for('valid_user', username=user.username))
 		else:
-			return render_template('authenticate.html', next_question=next_question)
+			return render_template('authenticate.html', next_question=next_question_urls)
 
 @app.route('/<username>')
 def valid_user(username):
@@ -112,6 +131,12 @@ def valid_user(username):
 def logout():
 	session.pop('username', None)
 	return render_template('home.html')
+
+@app.route('/<username>/delete')
+def delete(username):
+	user = find_user(username)
+	UserModel.delete_user(user)
+	return redirect(url_for('login'))
 
 # ------ #
 

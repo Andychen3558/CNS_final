@@ -32,7 +32,8 @@ import time
 class API():
     def __init__(self):
         self.vecfile = 'embedding/wiki.en.vec.small'
-        self.model = Embedding.Embedding(self.vecfile)
+        self.cache = self.vecfile+'.urlcache.json'
+        self.model = Embedding.Embedding(self.vecfile, self.cache)
         self.Record={}  ## { (username, sessionid): {'try_times' : ??, 'score' : ?? , 'NowQuestion': ??, 'time' :?? ,'success': True/False } }
         
         ## use for score threshold
@@ -59,8 +60,7 @@ class API():
         return
     
     def _get_list(self, now):
-        return [attr['name'] for attr in self.Record[now]['NowQuestion'].values()]
-        #return [attr['url'] for attr in self.Record[now]['NowQuestion'].values()]
+        return [attr['name'] for attr in self.Record[now]['NowQuestion'].values()], [attr['url'] for attr in self.Record[now]['NowQuestion'].values()]
 
     def _check(self, now):       
         ## success if score is enough
@@ -93,13 +93,13 @@ class API():
         self._check(now)
         
         if self.Record[now]['success']==True:
-            return (True, None)
+            return (True, None, None)
         elif self.Record[now]['failure']==True:
             self._remove_dead_connection(now)
-            return (False, None)
+            return (False, None, None)
         else:
-            tmp_list = self._get_list(now)
-            return (True, tmp_list)
+            tmp_list, tmp_list2 = self._get_list(now)
+            return (True, tmp_list, tmp_list2)
         
         
         
@@ -115,10 +115,10 @@ class API():
 
             word=None
 
-            print ("user_ans is: ", user_ans)
+            # print ("user_ans is: ", user_ans)
 
             for tmp in now_question.keys():
-                print(tmp, now_question[tmp]['name'])
+                print(tmp, now_question[tmp]['score'])
                 if now_question[tmp]['name'] == user_ans:
                     word = tmp
             if word==None:
@@ -132,7 +132,7 @@ class API():
                 self.Record[now]['score'] = float('-inf')
             else:
                 self.Record[now]['score'] += chosen_score
-            print ( "score is: " , self.Record[now]['score'] )
+            # print ( "score is: " , self.Record[now]['score'] )
             new_question = dict(self.model.get_options(password))
             self.Record[now]['NowQuestion'] = new_question
             self.Record[now]['try_times'] += 1

@@ -10,7 +10,8 @@
 	<form method='post' style="text-align: center; margin-top: 100px" action="./authenticate">
 		{% for choice in next_question %}
 			<input type="radio" name="choice" id="choice{{ loop.index }}" value="{{ choice }}">
-	    	<label for="choice{{ loop.index }}">{{ choice }}</label>
+			<img src="{{ choice }}" for="choice{{ loop.index }}">
+	    	<!-- <label for="choice{{ loop.index }}">{{ choice }}</label> -->
 	    	<br>
 	    {% endfor %}
 	    <button type="submit">Submit</button>
