@@ -148,3 +148,90 @@ class API():
             self.Record[now]['time'] = int(time.time())
 
         return
+    
+    # return a string that an attacker may choose
+    def attack(now_question, history)
+        guessed_ans = None
+        max_score = float('-inf')
+        for name in now_question.keys():
+            score = 0
+            for his in history:
+                score += self.model.similarity(name, his)
+            if score > max_score:
+                guessed_ans = name
+                max_score = score
+        return guessed_ans
+    
+    
+    ## return [ [ word 1 , word 2, ...], ... ]
+    def _get_list_v2(self, now): 
+        return [ [ attr['name'] for attr in tmp_list] for tmp_list in self.Record[now]['NowQuestion'] ], [ [ attr['url'] for attr in tmp_list] for tmp_list in self.Record[now]['NowQuestion'] ]
+        
+    
+    def try_to_login_v2(self, username, password, sessionid):
+        ##new session
+        now = ( username, sessionid )
+        
+        if self.Record.get( now )==None:
+            ## initialize 
+            ## list , list , dict
+            newQuestion = list(self.model.get_options_by_size(password,9,3))
+            
+            self.Record[now]= {'try_times'   : 0,
+                               'score'       : 0,
+                               'NowQuestion' : newQuestion,
+                               'time'        : int(time.time()),
+                               'success': False,
+                               'failure': False}
+        
+        self._check(now)
+        
+        if self.Record[now]['success']==True:
+            return (True, None, None)
+        elif self.Record[now]['failure']==True:
+            self._remove_dead_connection(now)
+            return (False, None, None)
+        else:
+            tmp_list, tmp_list2 = self._get_list_v2(now)
+            return (True, tmp_list, tmp_list2)
+    
+    ## No return value
+    def update_by_choice_v2(self, username, password, sessionid, user_ans):
+        now = (username, sessionid)
+        if self.Record.get(now) == None:
+            print('You are caculating a score in a nonexistent session.')
+            print('diggerrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr!!!!!')
+        else:
+            now_question = self.Record[now]['NowQuestion']
+
+            word_list=None
+
+            # print ("user_ans is: ", user_ans)
+
+            for tmp_list in now_question:
+                tmp_list2 = [ attr['name'] for attr in tmp_list ]
+                print (tmp_list2)
+                if tmp_list2 == user_ans:
+                    word_list = tmp_list
+            if word_list==None:
+                return
+            #o0嘂卍乂WhItE DeStInY乂卍嘂0o
+            
+            score_list = [ max ([attr['score'] for attr in tmp_list ]) for tmp_list in now_question ]
+            max_score, min_score = max(score_list), min(score_list)
+            chosen_score = max([ attr['score'] for attr in word_list ])
+            
+            now_times = self.Record[now]['try_times']
+            #self.Record[now]['score'] *= now_times
+            self.Record[now]['score'] += (chosen_score - min_score) / (max_score - min_score) / (self.try_bound + 1)
+            #self.Record[now]['score'] /= now_times + 1
+
+
+            # print ( "score is: " , self.Record[now]['score'] )
+            new_question = dict(self.model.get_options(password))
+            self.Record[now]['NowQuestion'] = new_question
+            self.Record[now]['try_times'] += 1
+            self.Record[now]['time'] = int(time.time())
+
+        return
+    

@@ -26,15 +26,11 @@ class Embedding():
         self.posmask = 0 # avoid topn
         self.negtopn = 0 # choise topn of negative words
         self.negrann = 0 # sample n from above
-        self.optionn = 9 # total choice num
-        # self.postopn2 = 3000
-        # self.posrann2 = 8
 
     def invocab(self, word):
         return word in self.model.vocab
     
-    def get_options(self, word):
-        
+    def get_options(self, word, opt_num=9, get_url=False): # default opt_num = 9
         # check word exists in vocab
         if not self.invocab(word):
             return None
@@ -51,7 +47,7 @@ class Embedding():
         
         # random select keys
         keys = self.model.vocab.keys()
-        otherkeys = random.sample(keys, self.optionn-self.posrann-self.negrann)
+        otherkeys = random.sample(keys, opt_num-self.posrann-self.negrann)
         choice.extend(otherkeys)
 
         # high = self.model.most_similar(positive=[word], topn=self.postopn2)
@@ -64,14 +60,41 @@ class Embedding():
         choice_dic = {}
         
         for i in choice:
+
+            url = ''
+            if get_url:
+                url = self.cache_url[i] if i in self.cache_url else get_img(i)
+
             choice_dic[i] = {
-                "url": self.cache_url[i] if i in self.cache_url else get_img(i),
+                "url": url,
                 "score": self.model.similarity(word, i),
                 "name": i
             }
             
         return choice_dic
     
+    def get_options_by_size(self, word, opt_num, subw_num):
+        choice = self.get_options(word, opt_num)
+        keys = self.model.vocab.keys()
+        otherkeys = random.sample(keys, opt_num*(subw_num-1))
+        index = 0
+        choice_list = []
+
+        for i in choice:
+            subw_list = [choice[i]]
+            for j in range(subw_num-1):
+
+                subw_list.append({
+                    "url": '',
+                    "score": self.similarity(word, otherkeys[index]),
+                    'name': otherkeys[index]
+                })
+
+                index += 1
+            choice_list.append(subw_list)
+        
+        return choice_list
+
     def similarity(self, w1, w2):
         if not self.invocab(w1) or not self.invocab(w2):
             return None
