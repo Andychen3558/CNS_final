@@ -67,7 +67,7 @@ class API():
         if self.Record[now]['score']>self.success_thres:
             self.Record[now]['success'] = True
         
-- [ ]         ## failure if times exceed
+        ## failure if times exceed
         elif self.Record[now]['try_times']> self.try_bound:
             self.Record[now]['failure'] = True
         
