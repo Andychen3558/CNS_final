@@ -73,7 +73,7 @@ class Embedding():
             
         return choice_dic
     
-    def get_options_by_sizes(self, word, opt_num, subw_num):
+    def get_options_by_size(self, word, opt_num, subw_num):
         choice = self.get_options(word, opt_num)
         keys = self.model.vocab.keys()
         otherkeys = random.sample(keys, opt_num*(subw_num-1))
