@@ -12,7 +12,8 @@
 			<div style="display: inline-block; width: 50%;">
 				<input type="radio" name="choice" id="choice{{ loop.index }}" value="{{ choice }}">
 				<!-- <img src="{{ choice }}" for="choice{{ loop.index }}"> -->
-		    	<label for="choice{{ loop.index }}">{{ choice[0] }}, {{ choice[1] }}, {{ choice[2] }}</label>
+		    	<!-- <label for="choice{{ loop.index }}">{{ choice[0] }}, {{ choice[1] }}, {{ choice[2] }}</label> -->
+		    	<label for="choice{{ loop.index }}">{{ choice }}</label>
 		    	<br>
 	    	</div>
 	    {% endfor %}

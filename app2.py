@@ -8,6 +8,7 @@ from flask import session
 from datetime import timedelta
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from googletrans import Translator
 import os
 import random
 
@@ -15,6 +16,7 @@ from server_core import API
 vecfile = 'embedding/wiki.en.vec.small'
 caahe = 'embedding/wiki.en.vec.small.urlcache.json'
 userAPIs = API(vecfile)
+trans = Translator()
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///user.db'
@@ -113,13 +115,8 @@ def authenticate(username):
 		if request.form:
 			# index = next_question_urls.index(request.form['choice'])
 			# print(index)
-			tmp = request.form['choice']
-			tmp = tmp.split('\'')
-			answer = []
-			answer.append(tmp[1])
-			answer.append(tmp[3])
-			answer.append(tmp[5])
-			
+			answer = [tmp.strip("' []").split(' (')[0] for tmp in request.form['choice'].split(',')]
+			print(answer)
 			# user.add_choice(answer)
 			userAPIs.update_by_choice_v2(user.username, user.password, sessionid, answer)
 		return redirect(url_for('authenticate', username=user.username))
@@ -132,7 +129,14 @@ def authenticate(username):
 			del user_session[username]
 			return redirect(url_for('valid_user', username=user.username))
 		else:
-			return render_template('authenticate.html', next_question=next_question_words)
+			questions = []
+			for i in next_question_words:
+				tmp = []
+				for j in i:
+					tmp.append(j+' ('+trans.translate(j, dest='zh-tw').text+')')
+				questions.append(tmp)
+			# print(questions)
+			return render_template('authenticate.html', next_question=questions)
 
 @app.route('/<username>')
 def valid_user(username):
