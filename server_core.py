@@ -150,7 +150,7 @@ class API():
         return
     
     # return a string that an attacker may choose
-    def attack(now_question, history)
+    def attack(now_question, history):
         guessed_ans = None
         max_score = float('-inf')
         for name in now_question.keys():
@@ -210,7 +210,7 @@ class API():
 
             for tmp_list in now_question:
                 tmp_list2 = [ attr['name'] for attr in tmp_list ]
-                print (tmp_list2)
+                # print (tmp_list2)
                 if tmp_list2 == user_ans:
                     word_list = tmp_list
             if word_list==None:
