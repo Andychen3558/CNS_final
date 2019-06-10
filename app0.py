@@ -151,8 +151,8 @@ def valid_user(username):
 	session.permanent = True
 	return render_template('home.html', username=username)
 
-@app.route('/logout/')
-def logout(username):
+@app.route('/logout')
+def logout():
 	session.pop('username', None)
 	# success_user.remove(username)
 	return render_template('home.html')
