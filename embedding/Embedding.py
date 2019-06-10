@@ -95,6 +95,7 @@ class Embedding():
                 })
 
                 index += 1
+            random.shuffle(subw_list)
             choice_list.append(subw_list)
         
         return choice_list
