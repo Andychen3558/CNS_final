@@ -150,13 +150,10 @@ class API():
         return
     
     # return a string that an attacker may choose
-<<<<<<< HEAD
-    def attack(now_question, history):
-=======
-    def attack(username, sessionid, history)
+    
+    def attack(username, sessionid, history):
         now = (username, sessionid)
         now_question = self.Record[now]['NowQuestion']
->>>>>>> f8d337e08456ee1aec7c17dd091e5c8eb9d2a9b6
         guessed_ans = None
         max_score = float('-inf')
         for name in now_question.keys():
@@ -181,7 +178,7 @@ class API():
         if self.Record.get( now )==None:
             ## initialize 
             ## list , list , dict
-            newQuestion = list(self.model.get_options_by_size(password,9,3))
+            newQuestion = list(self.model.get_options_by_size(password,5,3))
             
             self.Record[now]= {'try_times'   : 0,
                                'score'       : 0,
@@ -221,7 +218,7 @@ class API():
                     word_list = tmp_list
             if word_list==None:
                 return
-            #o0嘂卍乂WhItE DeStInY乂卍嘂0o
+            
             
             score_list = [ max ([attr['score'] for attr in tmp_list ]) for tmp_list in now_question ]
             max_score, min_score = max(score_list), min(score_list)
@@ -234,7 +231,7 @@ class API():
 
 
             # print ( "score is: " , self.Record[now]['score'] )
-            new_question = dict(self.model.get_options(password))
+            new_question = list(self.model.get_options_by_size(password,5,3))
             self.Record[now]['NowQuestion'] = new_question
             self.Record[now]['try_times'] += 1
             self.Record[now]['time'] = int(time.time())
@@ -242,7 +239,7 @@ class API():
         return
     
     # return a list of string that an attacker may choose
-    def attack_v2(username, sessionid, history)
+    def attack_v2(username, sessionid, history):
         now = (username, sessionid)
         now_question = self.Record[now]['NowQuestion']
         guessed_ans = None
