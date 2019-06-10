@@ -16,7 +16,7 @@ from server_core import API
 vecfile = 'embedding/wiki.en.vec.small'
 caahe = 'embedding/wiki.en.vec.small.urlcache.json'
 userAPIs = API(vecfile)
-trans = Translator()
+
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///user.db'
@@ -130,6 +130,7 @@ def authenticate(username):
 			del user_session[username]
 			return redirect(url_for('valid_user', username=user.username))
 		else:
+			trans = Translator()
 			questions = []
 			for i in next_question_words:
 				questions.append(i+' ('+trans.translate(i, dest='zh-tw').text+')')
@@ -150,7 +151,8 @@ def valid_user(username):
 
 @app.route('/logout')
 def logout():
-	session.pop('username', None)
+	if 'username' in session:
+		session.pop('username', None)
 	# success_user.remove(username)
 	return render_template('home.html')
 

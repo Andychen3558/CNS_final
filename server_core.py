@@ -30,13 +30,13 @@ from embedding import Embedding
 import time
 
 class API():
-    def __init__(self, vecfile, cache=None, use_url=False):
+    def __init__(self, vecfile, cache=None, use_url=False, init_thres=0.85, init_try_times=3):
         self.model = Embedding.Embedding(vecfile, cache)
         self.Record={}  ## { (username, sessionid): {'try_times' : ??, 'score' : ?? , 'NowQuestion': ??, 'time' :?? ,'success': True/False } }
         self.use_url= use_url
         ## use for score threshold
-        self.success_thres = 0.6
-        self.try_bound = 3
+        self.success_thres = init_thres
+        self.try_bound = init_try_times
     
         ## use for timeout
         self.timeout = 120
@@ -259,15 +259,18 @@ class API():
     # return a list of string that an attacker may choose
     def attack_v2(self, username, sessionid, history):
         now = (username, sessionid)
+        print (history)
         now_question = self.Record[now]['NowQuestion']
         guessed_ans = None
         max_score = float('-inf')
-        for group in now_question.values():
+        for group in now_question:
             group_names = [attr['name'] for attr in group]
             score = 0
             for his_names in history:
+                if his_names == ['']:
+                    continue
                 score += max([self.model.similarity(group_name, his_name)
-                              for group_name, his_name in zip(group_names, his_names)])
+                              for group_name in group_names for his_name in his_names])
             if score > max_score:
                 guessed_ans = group_names
                 max_score = score
