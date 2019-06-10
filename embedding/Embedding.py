@@ -23,7 +23,7 @@ class Embedding():
             self.cache_url = {}
         self.postopn = 50 # choise topn of positive words
         self.posrann = 1 # sample n from above
-        self.posmask = 0 # avoid topn
+        self.posmask = 10 # avoid topn
         self.negtopn = 0 # choise topn of negative words
         self.negrann = 0 # sample n from above
 
