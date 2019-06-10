@@ -73,8 +73,8 @@ class Embedding():
             
         return choice_dic
     
-    def get_options_by_size(self, word, opt_num, subw_num):
-        choice = self.get_options(word, opt_num)
+    def get_options_by_size(self, word, opt_num, subw_num, get_url=False):
+        choice = self.get_options(word, opt_num, get_url=get_url)
         keys = self.model.vocab.keys()
         otherkeys = random.sample(keys, opt_num*(subw_num-1))
         index = 0
@@ -84,8 +84,12 @@ class Embedding():
             subw_list = [choice[i]]
             for j in range(subw_num-1):
 
+                url = ''
+                if get_url:
+                    url = self.cache_url[i] if i in self.cache_url else get_img(i)
+                
                 subw_list.append({
-                    "url": '',
+                    "url": url,
                     "score": self.similarity(word, otherkeys[index]),
                     'name': otherkeys[index]
                 })
