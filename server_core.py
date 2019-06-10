@@ -80,7 +80,7 @@ class API():
         
         if self.Record.get( now )==None:
             ## initialize 
-            newQuestion = dict(self.model.get_options(password))
+            newQuestion = dict(self.model.get_options(password, get_url=True))
             self.Record[now]= {'try_times'   : 0,
                                'score'     : 0,
                                'NowQuestion' : newQuestion,
@@ -96,7 +96,9 @@ class API():
             self._remove_dead_connection(now)
             return (False, None, None)
         else:
+            print (self.Record[now]['NowQuestion'])
             tmp_list, tmp_list2 = self._get_list(now)
+            print (tmp_list, tmp_list2)
             return (True, tmp_list, tmp_list2)
         
         
@@ -142,7 +144,7 @@ class API():
 
 
             # print ( "score is: " , self.Record[now]['score'] )
-            new_question = dict(self.model.get_options(password))
+            new_question = dict(self.model.get_options(password, get_url=True))
             self.Record[now]['NowQuestion'] = new_question
             self.Record[now]['try_times'] += 1
             self.Record[now]['time'] = int(time.time())

@@ -136,7 +136,7 @@ def authenticate(username):
 					tmp.append(j+' ('+trans.translate(j, dest='zh-tw').text+')')
 				questions.append(tmp)
 			# print(questions)
-			return render_template('authenticate.html', next_question=questions)
+			return render_template('authenticate2.html', next_question=questions)
 
 @app.route('/<username>')
 def valid_user(username):

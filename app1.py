@@ -8,7 +8,6 @@ from flask import session
 from datetime import timedelta
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-from googletrans imp
 import os
 import random
 
@@ -127,7 +126,7 @@ def authenticate(username):
 			del user_session[username]
 			return redirect(url_for('valid_user', username=user.username))
 		else:
-			return render_template('authenticate.html', next_question=next_question_urls)
+			return render_template('authenticate1.html', next_question=next_question_urls)
 
 @app.route('/<username>')
 def valid_user(username):
