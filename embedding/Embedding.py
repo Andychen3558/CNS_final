@@ -27,6 +27,7 @@ class Embedding():
         self.negtopn = 0 # choise topn of negative words
         self.negrann = 0 # sample n from above
 
+
     def invocab(self, word):
         return word in self.model.vocab
     
