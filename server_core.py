@@ -165,7 +165,14 @@ class API():
                 max_score = score
         return guessed_ans
     
-    
+    def _compare_list(list1, list2):
+		if len(list1)!=len(list2):
+			return False
+		for i in range(len(list1)):
+			if list1[i]!=list2[i]:
+				return False
+		return True
+	
     ## return [ [ word 1 , word 2, ...], ... ]
     def _get_list_v2(self, now): 
         return [ [ attr['name'] for attr in tmp_list] for tmp_list in self.Record[now]['NowQuestion'] ], [ [ attr['url'] for attr in tmp_list] for tmp_list in self.Record[now]['NowQuestion'] ]
@@ -178,7 +185,7 @@ class API():
         if self.Record.get( now )==None:
             ## initialize 
             ## list , list , dict
-            newQuestion = list(self.model.get_options_by_size(password,5,3))
+            newQuestion = list(self.model.get_options_by_size(password,5,3, get_url=True))
             
             self.Record[now]= {'try_times'   : 0,
                                'score'       : 0,
@@ -214,7 +221,7 @@ class API():
             for tmp_list in now_question:
                 tmp_list2 = [ attr['name'] for attr in tmp_list ]
                 print (tmp_list2)
-                if tmp_list2 == user_ans:
+                if self._compare_list(tmp_list2 , user_ans)== True:
                     word_list = tmp_list
             print(word_list)
             if word_list==None:
@@ -232,7 +239,7 @@ class API():
 
 
             # print ( "score is: " , self.Record[now]['score'] )
-            new_question = list(self.model.get_options_by_size(password,5,3))
+            new_question = list(self.model.get_options_by_size(password,5,3, get_url=True))
             print(new_question)
             self.Record[now]['NowQuestion'] = new_question
             self.Record[now]['try_times'] += 1
