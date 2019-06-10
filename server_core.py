@@ -154,6 +154,9 @@ class API():
     # return a string that an attacker may choose
     
     def attack(self, username, sessionid, history):
+        print (history)
+        # if history == ['']:
+        #     return "No guess"
         now = (username, sessionid)
         now_question = self.Record[now]['NowQuestion']
         guessed_ans = None
@@ -161,6 +164,8 @@ class API():
         for name in now_question.keys():
             score = 0
             for his in history:
+                if his == "":
+                    continue
                 score += self.model.similarity(name, his)
             if score > max_score:
                 guessed_ans = name

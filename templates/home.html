@@ -8,7 +8,7 @@
 {% block content %}
 	{% with messages = get_flashed_messages() %}
 		{% if messages %}
-		<ul class='flash' style="line-height: 100px;">
+		<ul class='flash'>
 			{% for message in messages %}
 		        <li>{{ message }}</li>
 		    {% endfor %}

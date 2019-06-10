@@ -49,7 +49,11 @@ class UserModel(db.Model):
 		self.choices += (choice+';')
 		db.session.commit()
 	def init_choices(self):
-		self.choices = ""
+		list_choices = self.choices.split(';')
+		if len(list_choices) > 100:
+			num_to_delete = len(list_choices) - 100
+			list_choices = list_choices[num_to_delete:]
+		self.choices = ';'.join(list_choices)
 		db.session.commit()
 
 	@classmethod
@@ -109,7 +113,7 @@ def authenticate(username):
 	sessionid = user_session[username]
 
 	good , next_question_words, next_question_urls = userAPIs.try_to_login(user.username, user.password, sessionid)
-	print ("attacker guess: ", userAPIs.attack(user.username , sessionid, user.choices.split(';')))
+	
 	if request.method == 'POST':
 		#user choose an answer from next_question
 		if request.form:
@@ -133,6 +137,7 @@ def authenticate(username):
 			for i in next_question_words:
 				questions.append(i+' ('+trans.translate(i, dest='zh-tw').text+')')
 			print(questions)
+			print ("attacker guess: ", userAPIs.attack(user.username , sessionid, user.choices.split(';')))
 			return render_template('authenticate0.html', next_question=questions)
 
 @app.route('/<username>')
