@@ -150,7 +150,8 @@ def valid_user(username):
 
 @app.route('/logout')
 def logout():
-	session.pop('username', None)
+	if 'username' in session:
+		session.pop('username', None)
 	# success_user.remove(username)
 	return render_template('home.html')
 

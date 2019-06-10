@@ -259,13 +259,16 @@ class API():
     # return a list of string that an attacker may choose
     def attack_v2(self, username, sessionid, history):
         now = (username, sessionid)
+        print (history)
         now_question = self.Record[now]['NowQuestion']
         guessed_ans = None
         max_score = float('-inf')
-        for group in now_question.values():
+        for group in now_question:
             group_names = [attr['name'] for attr in group]
             score = 0
             for his_names in history:
+                if his_names == ['']:
+                    continue
                 score += max([self.model.similarity(group_name, his_name)
                               for group_name, his_name in zip(group_names, his_names)])
             if score > max_score:

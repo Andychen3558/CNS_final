@@ -45,11 +45,18 @@ class UserModel(db.Model):
 	def add_user(self):
 		db.session.add(self)
 		db.session.commit()
-	def add_choice(self, choice):
-		self.choices += (choice+';')
+	def add_choice(self, choices):
+		for ch in choices:
+			self.choices += (ch+',')
+		tmp = self.choices[:-1] + ';'
+		self.choices = tmp
 		db.session.commit()
 	def init_choices(self):
-		self.choices = ""
+		list_choices = self.choices.split(';')
+		if len(list_choices) > 100:
+			num_to_delete = len(list_choices) - 100
+			list_choices = list_choices[num_to_delete:]
+		self.choices = ';'.join(list_choices)
 		db.session.commit()
 
 	@classmethod
@@ -103,7 +110,7 @@ def login():
 @app.route('/<username>/authenticate', methods=['GET', 'POST'])
 def authenticate(username):
 	user = find_user(username)
-	# print(user.choices)
+	print(user.choices)
 	if user_session.get(username)==None:
 		user_session[username] = random.randint(0,100000)
 	sessionid = user_session[username]
@@ -113,11 +120,9 @@ def authenticate(username):
 	if request.method == 'POST':
 		#user choose an answer from next_question
 		if request.form:
-			# index = next_question_urls.index(request.form['choice'])
-			# print(index)
 			answer = [tmp.strip("' []").split(' (')[0] for tmp in request.form['choice'].split(',')]
-			print(answer)
-			# user.add_choice(answer)
+			# print(answer)
+			user.add_choice(answer)
 			userAPIs.update_by_choice_v2(user.username, user.password, sessionid, answer)
 		return redirect(url_for('authenticate', username=user.username))
 	else:
@@ -135,7 +140,14 @@ def authenticate(username):
 				for j in i:
 					tmp.append(j+' ('+trans.translate(j, dest='zh-tw').text+')')
 				questions.append(tmp)
-			# print(questions)
+			### choice for attacker
+			choices = []
+			for i in user.choices.split(';'):
+				tmp = []
+				for j in i.split(','):
+					tmp.append(j)
+				choices.append(tmp)
+			print ("attacker guess: ", userAPIs.attack_v2(user.username , sessionid, choices))
 			return render_template('authenticate2.html', next_question=questions)
 
 @app.route('/<username>')
