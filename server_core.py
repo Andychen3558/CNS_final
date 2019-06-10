@@ -60,7 +60,7 @@ class API():
     def _get_list(self, now):
         return [attr['name'] for attr in self.Record[now]['NowQuestion'].values()], [attr['url'] for attr in self.Record[now]['NowQuestion'].values()]
 
-    def _check(self, now):       
+    def _check(self, now):     
         ## success if score is enough
         if self.Record[now]['score']>self.success_thres:
             self.Record[now]['success'] = True
@@ -69,11 +69,11 @@ class API():
         elif self.Record[now]['try_times']> self.try_bound:
             self.Record[now]['failure'] = True
         
-        return     
+        return   
         
     ## return (True, None) <- success,
-    ##        (True, a list contain nine object) <- during authorization ,
-    ##        (False, None) <- fail 
+    ##    (True, a list contain nine object) <- during authorization ,
+    ##    (False, None) <- fail 
     def try_to_login(self, username, password, sessionid):
         ##new session
         now = ( username, sessionid )
@@ -82,9 +82,9 @@ class API():
             ## initialize 
             newQuestion = dict(self.model.get_options(password))
             self.Record[now]= {'try_times'   : 0,
-                               'score'       : 0,
+                               'score'     : 0,
                                'NowQuestion' : newQuestion,
-                               'time'        : int(time.time()),
+                               'time'      : int(time.time()),
                                'success': False,
                                'failure': False}
         
@@ -151,7 +151,7 @@ class API():
     
     # return a string that an attacker may choose
     
-    def attack(username, sessionid, history):
+    def attack(self, username, sessionid, history):
         now = (username, sessionid)
         now_question = self.Record[now]['NowQuestion']
         guessed_ans = None
@@ -165,14 +165,14 @@ class API():
                 max_score = score
         return guessed_ans
     
-    def _compare_list(list1, list2):
-		if len(list1)!=len(list2):
-			return False
-		for i in range(len(list1)):
-			if list1[i]!=list2[i]:
-				return False
-		return True
-	
+    def _compare_list(self, list1, list2):
+        if len(list1)!=len(list2):
+            return False
+        for i in range(len(list1)):
+            if list1[i]!=list2[i]:
+                return False
+        return True
+    
     ## return [ [ word 1 , word 2, ...], ... ]
     def _get_list_v2(self, now): 
         return [ [ attr['name'] for attr in tmp_list] for tmp_list in self.Record[now]['NowQuestion'] ], [ [ attr['url'] for attr in tmp_list] for tmp_list in self.Record[now]['NowQuestion'] ]
@@ -188,9 +188,9 @@ class API():
             newQuestion = list(self.model.get_options_by_size(password,5,3, get_url=True))
             
             self.Record[now]= {'try_times'   : 0,
-                               'score'       : 0,
+                               'score'     : 0,
                                'NowQuestion' : newQuestion,
-                               'time'        : int(time.time()),
+                               'time'      : int(time.time()),
                                'success': False,
                                'failure': False}
         
@@ -221,6 +221,7 @@ class API():
             for tmp_list in now_question:
                 tmp_list2 = [ attr['name'] for attr in tmp_list ]
                 print (tmp_list2)
+                print(user_ans)
                 if self._compare_list(tmp_list2 , user_ans)== True:
 
                     word_list = tmp_list
@@ -249,7 +250,7 @@ class API():
         return
     
     # return a list of string that an attacker may choose
-    def attack_v2(username, sessionid, history):
+    def attack_v2(self, username, sessionid, history):
         now = (username, sessionid)
         now_question = self.Record[now]['NowQuestion']
         guessed_ans = None
