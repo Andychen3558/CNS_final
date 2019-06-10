@@ -209,13 +209,14 @@ class API():
 
             word_list=None
 
-            # print ("user_ans is: ", user_ans)
+            print ("user_ans is: ", user_ans)
 
             for tmp_list in now_question:
                 tmp_list2 = [ attr['name'] for attr in tmp_list ]
-                # print (tmp_list2)
+                print (tmp_list2)
                 if tmp_list2 == user_ans:
                     word_list = tmp_list
+            print(word_list)
             if word_list==None:
                 return
             
@@ -232,6 +233,7 @@ class API():
 
             # print ( "score is: " , self.Record[now]['score'] )
             new_question = list(self.model.get_options_by_size(password,5,3))
+            print(new_question)
             self.Record[now]['NowQuestion'] = new_question
             self.Record[now]['try_times'] += 1
             self.Record[now]['time'] = int(time.time())
