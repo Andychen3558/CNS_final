@@ -118,9 +118,6 @@ def authenticate(username):
 		#user choose an answer from next_question
 		if request.form:
 			answer = request.form['choice'].split(' ')[0]
-			# index = next_question_urls.index(request.form['choice'])
-			# print(index)
-			# answer = next_question_words[index]
 			user.add_choice(answer)
 			userAPIs.update_by_choice(user.username, user.password, sessionid, answer)
 		return redirect(url_for('authenticate', username=user.username))
