@@ -209,14 +209,14 @@ class API():
 
             word_list=None
 
-            print ("user_ans is: ", user_ans)
+            # print ("user_ans is: ", user_ans)
 
             for tmp_list in now_question:
                 tmp_list2 = [ attr['name'] for attr in tmp_list ]
-                print (tmp_list2)
+                print (tmp_list2 == user_ans)
                 if tmp_list2 == user_ans:
                     word_list = tmp_list
-            print(word_list)
+            # print(word_list)
             if word_list==None:
                 return
             
