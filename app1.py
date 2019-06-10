@@ -14,7 +14,7 @@ import random
 from server_core import API
 vecfile = 'embedding/wiki.en.vec.small'
 caahe = 'embedding/wiki.en.vec.small.urlcache.json'
-userAPIs = API(vecfile, use_url=True)
+userAPIs = API(vecfile, use_url=True, init_thres=0.6)
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///user.db'
