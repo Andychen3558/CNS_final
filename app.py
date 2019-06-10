@@ -12,8 +12,8 @@ import os
 import random
 
 from server_core import API
-vecfile = 'embedding/wiki.en.vec.small'
-caahe = 'embedding/wiki.en.vec.small.urlcache.json'
+vecfile = 'embedding/wiki.zh.vec.small'
+# caahe = 'embedding/wiki.en.vec.small.urlcache.json'
 userAPIs = API(vecfile)
 
 app = Flask(__name__)

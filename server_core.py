@@ -185,7 +185,7 @@ class API():
         if self.Record.get( now )==None:
             ## initialize 
             ## list , list , dict
-            newQuestion = list(self.model.get_options_by_size(password,5,3, get_url=True))
+            newQuestion = list(self.model.get_options_by_size(password,5,3, get_url=False))
             
             self.Record[now]= {'try_times'   : 0,
                                'score'     : 0,
@@ -220,8 +220,8 @@ class API():
 
             for tmp_list in now_question:
                 tmp_list2 = [ attr['name'] for attr in tmp_list ]
-                print (tmp_list2)
-                print(user_ans)
+                # print (tmp_list2)
+                # print(user_ans)
                 if self._compare_list(tmp_list2 , user_ans)== True:
 
                     word_list = tmp_list
@@ -229,11 +229,11 @@ class API():
             if word_list==None:
                 return
             
-            
+    
             score_list = [ max ([attr['score'] for attr in tmp_list ]) for tmp_list in now_question ]
             max_score, min_score = max(score_list), min(score_list)
             chosen_score = max([ attr['score'] for attr in word_list ])
-            
+            print(score_list, chosen_score)        
             now_times = self.Record[now]['try_times']
             #self.Record[now]['score'] *= now_times
             self.Record[now]['score'] += (chosen_score - min_score) / (max_score - min_score) / (self.try_bound + 1)
@@ -241,8 +241,8 @@ class API():
 
 
             # print ( "score is: " , self.Record[now]['score'] )
-            new_question = list(self.model.get_options_by_size(password,5,3, get_url=True))
-            print(new_question)
+            new_question = list(self.model.get_options_by_size(password,5,3, get_url=False))
+            # print(new_question)
             self.Record[now]['NowQuestion'] = new_question
             self.Record[now]['try_times'] += 1
             self.Record[now]['time'] = int(time.time())
