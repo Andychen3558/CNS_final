@@ -30,10 +30,10 @@ from embedding import Embedding
 import time
 
 class API():
-    def __init__(self, vecfile, cache=None):
+    def __init__(self, vecfile, cache=None, use_url=False):
         self.model = Embedding.Embedding(vecfile, cache)
         self.Record={}  ## { (username, sessionid): {'try_times' : ??, 'score' : ?? , 'NowQuestion': ??, 'time' :?? ,'success': True/False } }
-        
+        self.use_url= use_url
         ## use for score threshold
         self.success_thres = 0.6
         self.try_bound = 3
@@ -80,7 +80,7 @@ class API():
         
         if self.Record.get( now )==None:
             ## initialize 
-            newQuestion = dict(self.model.get_options(password, get_url=True))
+            newQuestion = dict(self.model.get_options(password, get_url= self.use_url))
             self.Record[now]= {'try_times'   : 0,
                                'score'     : 0,
                                'NowQuestion' : newQuestion,
@@ -144,7 +144,7 @@ class API():
 
 
             # print ( "score is: " , self.Record[now]['score'] )
-            new_question = dict(self.model.get_options(password, get_url=True))
+            new_question = dict(self.model.get_options(password, get_url= self.use_url))
             self.Record[now]['NowQuestion'] = new_question
             self.Record[now]['try_times'] += 1
             self.Record[now]['time'] = int(time.time())
@@ -187,7 +187,7 @@ class API():
         if self.Record.get( now )==None:
             ## initialize 
             ## list , list , dict
-            newQuestion = list(self.model.get_options_by_size(password,5,3, get_url=False))
+            newQuestion = list(self.model.get_options_by_size(password,5,3, get_url= self.use_url))
             
             self.Record[now]= {'try_times'   : 0,
                                'score'     : 0,
@@ -243,7 +243,7 @@ class API():
 
 
             # print ( "score is: " , self.Record[now]['score'] )
-            new_question = list(self.model.get_options_by_size(password,5,3, get_url=False))
+            new_question = list(self.model.get_options_by_size(password,5,3, get_url= self.use_url))
             # print(new_question)
             self.Record[now]['NowQuestion'] = new_question
             self.Record[now]['try_times'] += 1
