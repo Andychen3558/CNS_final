@@ -270,7 +270,7 @@ class API():
                 if his_names == ['']:
                     continue
                 score += max([self.model.similarity(group_name, his_name)
-                              for group_name, his_name in zip(group_names, his_names)])
+                              for group_name in group_names for his_name in his_names])
             if score > max_score:
                 guessed_ans = group_names
                 max_score = score
