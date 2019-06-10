@@ -96,9 +96,9 @@ class API():
             self._remove_dead_connection(now)
             return (False, None, None)
         else:
-            print (self.Record[now]['NowQuestion'])
+            # print (self.Record[now]['NowQuestion'])
             tmp_list, tmp_list2 = self._get_list(now)
-            print (tmp_list, tmp_list2)
+            # print (tmp_list, tmp_list2)
             return (True, tmp_list, tmp_list2)
         
         
@@ -118,7 +118,7 @@ class API():
             # print ("user_ans is: ", user_ans)
 
             for tmp in now_question.keys():
-                print(tmp, now_question[tmp]['score'])
+                # print(tmp, now_question[tmp]['score'])
                 if now_question[tmp]['name'] == user_ans:
                     word = tmp
             if word==None:

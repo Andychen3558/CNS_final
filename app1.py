@@ -101,18 +101,19 @@ def login():
 @app.route('/<username>/authenticate', methods=['GET', 'POST'])
 def authenticate(username):
 	user = find_user(username)
-	print(user.choices)
+	# print(user.choices)
 	if user_session.get(username)==None:
 		user_session[username] = random.randint(0,100000)
 	sessionid = user_session[username]
 
 	good , next_question_words, next_question_urls = userAPIs.try_to_login(user.username, user.password, sessionid)
-	print(next_question_urls)
+	# print(next_question_urls)
 	if request.method == 'POST':
 		#user choose an answer from next_question
 		if request.form:
+			print(request.form)
 			index = next_question_urls.index(request.form['choice'])
-			print(index)
+			# print(index)
 			answer = next_question_words[index]
 			user.add_choice(answer)
 			userAPIs.update_by_choice(user.username, user.password, sessionid, answer)
