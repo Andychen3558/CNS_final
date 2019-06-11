@@ -21,7 +21,7 @@ class Embedding():
                 self.cache_url = json.load(f)
         else:
             self.cache_url = {}
-        self.postopn = 50 # choise topn of positive words
+        self.postopn = 70 # choise topn of positive words
         self.posrann = 1 # sample n from above
         self.posmask = 10 # avoid topn
         self.negtopn = 0 # choise topn of negative words
